@@ -3,7 +3,12 @@
 # инициализация один раз пример, как избежать глобалы
 from typing import AsyncGenerator
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from .config import DBConfig
 
@@ -15,13 +20,11 @@ def create_engine(db_config: DBConfig) -> AsyncEngine:
 
 
 def sa_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
-    return async_sessionmaker(
-        bind=engine,
-        autoflush=False,
-        expire_on_commit=False
-    )
+    return async_sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 
-async def get_session(session_factory: async_sessionmaker[AsyncSession]) -> AsyncGenerator[AsyncSession, None]:
+async def get_session(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> AsyncGenerator[AsyncSession, None]:
     async with session_factory() as session:
         yield session

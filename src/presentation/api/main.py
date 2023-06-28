@@ -1,14 +1,13 @@
 import uvicorn
-
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from .settings.config import APIConfig, Config
 from .controllers.main import setup_controllers
 from .di.main import setup_di
-
+from .settings.config import APIConfig, Config
 
 # uvicorn wsgi/asgi
+
 
 def build_app(config: Config) -> FastAPI:
     app = FastAPI(title="Cargo", default_response_class=ORJSONResponse)

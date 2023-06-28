@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from src.adapters.db.config import DBConfig
+
 from .extractor import ConfigExtractor
 
 
@@ -25,6 +26,6 @@ def load_config() -> Config:
             db_port=extractor.db_port,
             db_password=extractor.db_password,
             db_user=extractor.db_user,
-            db_name=extractor.db_name
-        )
+            db_name=extractor.db_name,
+        ),
     )

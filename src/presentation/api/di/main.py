@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.business_logic.test import SomeDAO
+
 from ..settings.config import Config
 
 
