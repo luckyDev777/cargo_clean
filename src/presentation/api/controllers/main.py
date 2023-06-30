@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from .test import router as test_router
+
+from .post import router as post_router
 
 
 def setup_controllers(app: FastAPI) -> None:
-    app.include_router(test_router)
+    app.include_router(router=post_router)

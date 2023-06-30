@@ -14,14 +14,9 @@ def create_engine(db_config: DBConfig) -> AsyncEngine:
     return create_async_engine(db_config.full_url, echo=db_config.db_echo)
 
 
-def sa_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+def create_pool(db_config: DBConfig) -> async_sessionmaker[AsyncSession]:
     return async_sessionmaker(
-        bind=engine,
+        bind=create_engine(db_config=db_config),
         autoflush=False,
         expire_on_commit=False
     )
-
-
-async def get_session(session_factory: async_sessionmaker[AsyncSession]) -> AsyncGenerator[AsyncSession, None]:
-    async with session_factory() as session:
-        yield session
