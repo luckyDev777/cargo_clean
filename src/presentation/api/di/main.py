@@ -1,14 +1,13 @@
 from fastapi import FastAPI
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from src.business_logic.test import SomeDAO
+from src.business_logic.post.interfaces.dao import PostDAO
+from .providers.db.main import DBProvider
+from .stub import Stub
 from ..settings.config import Config
 
 
-def some_dao_provider() -> SomeDAO:
-    raise NotImplementedError
+def setup_di(app: FastAPI, config: Config, pool: async_sessionmaker[AsyncSession]) -> None:
+    db_provider = DBProvider(pool=pool)
 
-
-def setup_di(app: FastAPI, config: Config) -> None:
-    some_dao = SomeDAO("hello world", 5)
-
-    app.dependency_overrides[some_dao_provider] = lambda: some_dao
+    app.dependency_overrides[Stub(PostDAO)] = db_provider.post_dao

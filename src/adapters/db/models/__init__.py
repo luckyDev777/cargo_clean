@@ -1,4 +1,3 @@
-from .location import Location
-from .cargo import Cargo
+from .post import Post
 
-__all__ = ["Location", "Cargo"]
+__all__ = ["Post"]
