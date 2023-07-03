@@ -5,7 +5,6 @@ WORKDIR /app
 
 ENV PYTHONBUFFERED 1\
     PYTHONDONTWRITEBYTECODE 1\
-
 COPY poetry.lock pyproject.toml ./
 
 RUN pip install --no-cache-dir --upgrade pip \
