@@ -12,3 +12,8 @@ class Post(DTO):
 @dataclass(frozen=True)
 class GetPost(DTO):
     post_id: int
+
+
+@dataclass(frozen=True)
+class CreatePost(DTO):
+    name: str

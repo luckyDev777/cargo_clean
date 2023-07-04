@@ -18,3 +18,12 @@ class PostDAOImpl(SQLAlchemyDAO, PostDAO):
             return convert_post_model_to_dto(post=post)
 
         raise PostIdNotExists(post_id=post_id)
+
+    async def create_post(self, *, post_name: str) -> dto.Post:
+        new_post = Post(name=post_name)
+
+        self._session.add(instance=new_post)
+
+        await self._session.flush()
+
+        return convert_post_model_to_dto(post=new_post)
