@@ -1,8 +1,8 @@
 from fastapi import FastAPI, status, Request
 from fastapi.responses import ORJSONResponse
 
-from src.business_logic.post.exceptions import PostIdNotExists
 from src.business_logic.common.exceptions.base import AppException
+from src.business_logic.post.exceptions import PostIdNotExists
 from src.presentation.api.controllers.responses.exceptions import ErrorResult
 
 
