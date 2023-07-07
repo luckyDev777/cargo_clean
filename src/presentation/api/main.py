@@ -6,7 +6,6 @@ from fastapi.responses import ORJSONResponse
 from .settings.config import APIConfig, Config
 from .controllers.main import setup_controllers
 from .di.main import setup_di
-from ...adapters.db.main import create_pool
 from .lifespan import lifespan
 
 
@@ -17,6 +16,6 @@ def build_app(config: Config) -> FastAPI:
 
     # Configuration Block
     setup_controllers(app=app)
-    setup_di(app=app, config=config, pool=create_pool(config.db))
+    setup_di(app=app, config=config)
 
     return app
