@@ -8,6 +8,10 @@ from src.business_logic.post.services import GetPostService, CreatePostService
 from src.presentation.api.di.stub import Stub
 
 
+def get_post_service(dao: PostDAO = Depends(Stub(PostDAO))) -> GetPostService:
+    return GetPostService(dao=dao)
+
+
 def create_post_service(
         uow: Annotated[UoW, Depends(Stub(UoW))],
         dao: Annotated[UoW, Depends(Stub(PostDAO))]
