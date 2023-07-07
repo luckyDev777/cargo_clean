@@ -10,3 +10,6 @@ class PostDAO(Protocol):
 
     async def create_post(self, *, post_name: str) -> dto.Post:
         ...
+
+    async def get_posts(self) -> list[dto.Post]:
+        ...

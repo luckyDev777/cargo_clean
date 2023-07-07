@@ -6,6 +6,8 @@ from src.business_logic.common.interfaces.persistance.uow import UoW
 from src.business_logic.post import dto
 from src.business_logic.post.services.create_post import CreatePostService
 from src.business_logic.post.services.get_post import GetPostService
+from src.business_logic.post.services.get_all_posts import GetAllPostsService
+
 
 
 from src.presentation.api.di.stub import Stub
@@ -13,6 +15,17 @@ from src.presentation.api.controllers.responses import ErrorResult
 from src.business_logic.post.exceptions import PostIdNotExists
 
 router = APIRouter(prefix="/posts", tags=["posts"])
+
+@router.get(
+    path='/',
+    responses={
+        status.HTTP_200_OK: {"model": list[dto.Post]}
+    },
+)
+async def get_posts(
+    service: Annotated[GetAllPostsService, Depends(Stub(GetAllPostsService))]
+) -> list[dto.Post]:
+    return await service()
 
 
 @router.get(
@@ -23,8 +36,8 @@ router = APIRouter(prefix="/posts", tags=["posts"])
     },
 )
 async def get_post_by_id(
-        post_id: int,
-        service: Annotated[GetPostService, Depends(Stub(GetPostService))]
+    post_id: int,
+    service: Annotated[GetPostService, Depends(Stub(GetPostService))]
 ) -> dto.Post:
     return await service(dto.GetPost(post_id=post_id))
 
