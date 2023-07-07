@@ -1,19 +1,22 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, AsyncSession
 
-from src.adapters.db.dao.post import PostDAOImpl
-from src.adapters.db.uow import SQLAlchemyUoW
-from src.business_logic.common.interfaces.persistance.uow import UoW
-from src.business_logic.post.interfaces.dao import PostDAO
+from src.adapters.db.config import DBConfig
+from src.adapters.db.main import create_engine, session_factory, build_session
+from src.presentation.api.di.stub import Stub
 
 
-class DBProvider:
-    def __init__(self, pool: async_sessionmaker[AsyncSession]):
-        self._pool = pool
+async def provide_engine(config: DBConfig = Depends(Stub(DBConfig))) -> AsyncEngine:
+    async with create_engine(db_config=config) as engine:
+        yield engine
 
-    async def post_dao(self) -> PostDAO:
-        async with self._pool() as session:
-            yield PostDAOImpl(session=session)
 
-    async def uow(self) -> UoW:
-        async with self._pool() as session:
-            yield SQLAlchemyUoW(session=session)
+def session_factory_provider(engine: AsyncEngine = Depends(Stub(AsyncEngine))) -> async_sessionmaker[AsyncSession]:
+    return session_factory(engine=engine)
+
+
+async def session_provider(
+    pool: async_sessionmaker[AsyncSession] = Depends(Stub(async_sessionmaker[AsyncSession]))
+) -> AsyncSession:
+    async with build_session(pool) as session:
+        yield session
