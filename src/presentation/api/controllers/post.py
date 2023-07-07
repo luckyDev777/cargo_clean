@@ -6,7 +6,7 @@ from src.business_logic.common.interfaces.persistance.uow import UoW
 from src.business_logic.post import dto
 from src.business_logic.post.services.create_post import CreatePostService
 from src.business_logic.post.services.get_post import GetPostService
-from src.presentation.api.di.providers.services.post import get_post_service
+
 
 from src.presentation.api.di.stub import Stub
 from src.presentation.api.controllers.responses import ErrorResult
