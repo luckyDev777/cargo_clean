@@ -4,7 +4,7 @@ from src.business_logic.post import dto
 from src.business_logic.post.exceptions import PostIdNotExists
 from .base import SQLAlchemyDAO
 from src.business_logic.post.interfaces.dao import PostDAO
-from ..converters import convert_post_model_to_dto
+from ..converters import convert_post_model_to_dto, convert_post_models_to_dtos
 from ..exception_mapper import exception_mapper
 from ..models import Post
 
@@ -30,3 +30,9 @@ class PostDAOImpl(SQLAlchemyDAO, PostDAO):
         await self._session.flush()
 
         return convert_post_model_to_dto(post=new_post)
+    
+    @exception_mapper
+    async def get_posts(self) -> list[dto.Post]:
+        statement = select(Post)
+        posts: list[Post] = await self._session.scalars(statement=statement)
+        return convert_post_models_to_dtos(posts)

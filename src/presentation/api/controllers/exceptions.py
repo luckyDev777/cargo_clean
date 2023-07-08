@@ -8,7 +8,7 @@ from src.presentation.api.controllers.responses.exceptions import ErrorResult
 
 def setup_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(PostIdNotExists, post_id_not_exist_handler)
-    app.add_exception_handler(Exception, unknown_exception_handler)
+    # app.add_exception_handler(Exception, unknown_exception_handler)
 
 
 async def post_id_not_exist_handler(request: Request, err: PostIdNotExists) -> ORJSONResponse:
