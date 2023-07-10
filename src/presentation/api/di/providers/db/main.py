@@ -6,17 +6,12 @@ from src.adapters.db.main import create_engine, session_factory, build_session
 from src.presentation.api.di.stub import Stub
 
 
-async def provide_engine(config: DBConfig = Depends(Stub(DBConfig))) -> AsyncEngine:
-    async with create_engine(db_config=config) as engine:
-        yield engine
-
-
 def session_factory_provider(engine: AsyncEngine = Depends(Stub(AsyncEngine))) -> async_sessionmaker[AsyncSession]:
     return session_factory(engine=engine)
 
 
 async def session_provider(
-    pool: async_sessionmaker[AsyncSession] = Depends(Stub(async_sessionmaker[AsyncSession]))
+        pool: async_sessionmaker[AsyncSession] = Depends(Stub(async_sessionmaker[AsyncSession]))
 ) -> AsyncSession:
     async with build_session(pool) as session:
         yield session
