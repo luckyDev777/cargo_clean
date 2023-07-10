@@ -12,13 +12,8 @@ from .config import DBConfig
 # engine - держит подключение к БД
 # Организация адаптера DB, организация presentation(api)
 
-@contextlib.asynccontextmanager
-async def create_engine(db_config: DBConfig) -> AsyncEngine:
-    engine = create_async_engine(db_config.full_url, echo=db_config.db_echo)
-
-    yield engine
-
-    await engine.dispose()
+def create_engine(db_config: DBConfig) -> AsyncEngine:
+    return create_async_engine(db_config.full_url, echo=db_config.db_echo)
 
 
 def session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
