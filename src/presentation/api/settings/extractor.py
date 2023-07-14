@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class ConfigExtractor(BaseSettings):
@@ -6,6 +6,8 @@ class ConfigExtractor(BaseSettings):
     db_port: int
     db_user: str
     db_password: str
+
+    sentry_host: str
 
     class Config:
         env_file = ".env"

@@ -1,19 +1,21 @@
 from dataclasses import dataclass
 
 from src.adapters.db.config import DBConfig
+from src.adapters.sentry.config import SentryConfig
 from .extractor import ConfigExtractor
 
 
 @dataclass
 class APIConfig:
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = 8001
 
 
 @dataclass
 class Config:
     api: APIConfig
     db: DBConfig
+    sentry: SentryConfig
 
 
 def load_config() -> Config:
@@ -26,5 +28,8 @@ def load_config() -> Config:
             db_password=extractor.db_password,
             db_user=extractor.db_user,
             db_name=extractor.db_name
+        ),
+        sentry=SentryConfig(
+            host=extractor.sentry_host
         )
     )

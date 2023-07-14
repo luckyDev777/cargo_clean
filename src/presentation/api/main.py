@@ -7,6 +7,7 @@ from .settings.config import APIConfig, Config
 from .controllers.main import setup_controllers
 from .di.main import setup_di
 from .lifespan import lifespan
+from ...adapters.sentry.main import setup_sentry
 
 
 # uvicorn wsgi/asgi
@@ -17,5 +18,7 @@ def build_app(config: Config) -> FastAPI:
     # Configuration Block
     setup_controllers(app=app)
     setup_di(app=app, config=config)
+
+    setup_sentry(config=config.sentry)
 
     return app
