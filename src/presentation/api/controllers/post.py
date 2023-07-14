@@ -1,11 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Response, status, Depends
 
 from src.business_logic.post import dto
 from src.business_logic.post.services.create_post import CreatePostService
 from src.business_logic.post.services.get_post import GetPostService
 from src.business_logic.post.services.get_all_posts import GetAllPostsService
+from src.business_logic.post.services.update_post import UpdatePostService
+from src.business_logic.post.services.delete_post import DeletePostService
 
 from src.presentation.api.di.stub import Stub
 from src.presentation.api.controllers.responses import ErrorResult
@@ -51,3 +53,32 @@ async def create_post(
         service: Annotated[CreatePostService, Depends(Stub(CreatePostService))]
 ) -> dto.Post:
     return await service(post_info=post_info)
+
+
+@router.put(
+    path="/{post_id}",
+    responses={
+        status.HTTP_201_CREATED: {"model": dto.Post},
+        status.HTTP_404_NOT_FOUND: {"model": ErrorResult[PostIdNotExists]},
+    }
+)
+async def update_post(
+    post_id: int,
+    post_info: dto.CreatePost,
+    service: Annotated[UpdatePostService, Depends(Stub(UpdatePostService))]
+) -> dto.Post:
+    return await service(post_id=post_id, post_info=post_info)
+
+
+@router.delete(
+    path="/{post_id}",
+    responses={
+        status.HTTP_404_NOT_FOUND: {"model": ErrorResult[PostIdNotExists]},
+    }
+)
+async def delete_post(
+    post_id: int,
+    service: Annotated[DeletePostService, Depends(Stub(DeletePostService))]
+) -> dto.Post:
+    await service(post_id=post_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
