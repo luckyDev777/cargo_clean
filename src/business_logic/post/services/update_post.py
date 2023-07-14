@@ -9,9 +9,9 @@ class UpdatePostService:
         self._dao = dao
         self._uow = uow
 
-    async def __call__(self, post_id: int, post_info: dto.CreatePost) -> dto.Post:
+    async def __call__(self, post_id: int, post_info: dto.UpdatePost) -> dto.Post:
         try:
-            updated_post = await self._dao.update_post(post_id=post_id, post_name=post_info.name)
+            updated_post = await self._dao.update_post(post_id=post_id, post_info=post_info)
         except DAOError as err:
             await self._uow.rollback()
             raise err

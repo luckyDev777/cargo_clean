@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from src.business_logic.common.dto.base import DTO
 
@@ -17,3 +18,8 @@ class GetPost(DTO):
 @dataclass(frozen=True)
 class CreatePost(DTO):
     name: str
+
+
+@dataclass(frozen=True)
+class UpdatePost(DTO):
+    name: str | None

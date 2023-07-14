@@ -38,29 +38,25 @@ class PostDAOImpl(SQLAlchemyDAO, PostDAO):
         return convert_post_models_to_dtos(posts)
     
     @exception_mapper
-    async def update_post(self, *, post_id: int, post_name: str) -> dto.Post:
+    async def update_post(self, *, post_id: int, post_info: dto.UpdatePost) -> dto.Post:
         statement = select(Post).where(Post.id == post_id)
         post: Post | None = await self._session.scalar(statement=statement)
 
         if post:
-            post.name = post_name
-            self._session.add(instance=post)
-
-            await self._session.flush()
+            post.name = post_info.name if post_info.name else post.name
 
             return convert_post_model_to_dto(post=post)
 
         raise PostIdNotExists(post_id=post_id)
     
     @exception_mapper
-    async def delete_post(self, *, post_id: int) -> dto.Post:
+    async def delete_post(self, *, post_id: int) -> None:
         statement = select(Post).where(Post.id == post_id)
         post: Post | None = await self._session.scalar(statement=statement)
 
         if post:
 
             await self._session.delete(instance=post)
-            await self._session.flush()
-            return convert_post_model_to_dto(post=post)
+            return
 
         raise PostIdNotExists(post_id=post_id)
