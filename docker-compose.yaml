@@ -1,6 +1,33 @@
 version: "3.8"
 
 services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./.env
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      custom-network:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      custom-network:
+    depends_on:
+      fastapi:
+        condition: service_started
+
   db:
     image: postgres:15.1-alpine
     restart: on-failure
@@ -17,6 +44,16 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
+
+  cache:
+    image: redis:latest
+    restart: on-failure
+    env_file:
+      - ./.env
+    ports:
+      - "6379:6379"
+    networks:
+      custom-network:
 
 networks:
   custom-network:

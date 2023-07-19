@@ -1,18 +1,27 @@
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, AsyncEngine
 
+from src.adapters.cache.dao.redis import CacheDAOImpl
+from src.adapters.cache.main import create_cache
 from src.business_logic.common.interfaces.persistance.uow import UoW
+from src.business_logic.post.interfaces.cache import CacheDAO
 from src.business_logic.post.interfaces.dao import PostDAO
-from src.business_logic.post.services import CreatePostService, GetPostService, GetAllPostsService, UpdatePostService, DeletePostService
+from src.business_logic.post.services import CreatePostService, GetPostService, GetAllPostsService, UpdatePostService, \
+    DeletePostService
 from .providers.db.main import session_provider
 from .providers.db.uow import uow_provider, post_dao_provider
-from .providers.services.post import create_post_service, get_post_service, get_posts_service, update_post_service, delete_post_service
+from .providers.services.post import create_post_service, get_post_service, get_posts_service, update_post_service, \
+    delete_post_service
 from .stub import Stub
 from ..settings.config import Config
 
 
 def setup_di(app: FastAPI, config: Config) -> None:
     # Setup DB dependencies
+    app.dependency_overrides[Stub(CacheDAO)] = lambda: CacheDAOImpl(
+        cache_client=create_cache(config=config.cache)
+    )
+
     app.dependency_overrides[Stub(AsyncEngine)] = lambda: app.state.engine
     app.dependency_overrides[Stub(async_sessionmaker[AsyncSession])] = lambda: app.state.pool
     app.dependency_overrides[Stub(AsyncSession)] = session_provider

@@ -7,8 +7,10 @@ from fastapi import APIRouter, Response, status, Depends
 from fastapi.responses import ORJSONResponse, FileResponse, StreamingResponse
 from pydantic import BaseModel
 from starlette.concurrency import run_in_threadpool
+from starlette.requests import Request
 
 from src.business_logic.post import dto
+from src.business_logic.post.interfaces.cache import CacheDAO
 from src.business_logic.post.services.create_post import CreatePostService
 from src.business_logic.post.services.get_post import GetPostService
 from src.business_logic.post.services.get_all_posts import GetAllPostsService
@@ -102,7 +104,8 @@ async def delete_post(
     }
 )
 async def get_image(
-        filename: str
+        filename: str,
+        request: Request
 ) -> FileResponse:
     return FileResponse(
         path=f"images/{filename}",
@@ -141,8 +144,9 @@ def some() -> None:
     summary="Короткое описание",
     description="Полное описание",
 )
-async def get_image(
+async def get_image(cache: Annotated[CacheDAO, Depends(Stub(CacheDAO))]
 ) -> str:
+    print(cache)
     #
     # [1, 2, 3, 4, 5, 6]
     # await run_in_threadpool(some) - создает новый? ThreadPoolExecutor

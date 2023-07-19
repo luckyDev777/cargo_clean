@@ -9,6 +9,8 @@ class ConfigExtractor(BaseSettings):
 
     sentry_host: str
 
+    cache_host: str
+
     class Config:
         env_file = ".env"
         env_file_encoding = 'utf-8'
