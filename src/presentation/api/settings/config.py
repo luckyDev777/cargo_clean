@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from src.adapters.cache.config import CacheConfig
 from src.adapters.db.config import DBConfig
 from src.adapters.sentry.config import SentryConfig
 from .extractor import ConfigExtractor
@@ -16,6 +17,7 @@ class Config:
     api: APIConfig
     db: DBConfig
     sentry: SentryConfig
+    cache: CacheConfig
 
 
 def load_config() -> Config:
@@ -31,5 +33,8 @@ def load_config() -> Config:
         ),
         sentry=SentryConfig(
             host=extractor.sentry_host
+        ),
+        cache=CacheConfig(
+            host=extractor.cache_host
         )
     )
