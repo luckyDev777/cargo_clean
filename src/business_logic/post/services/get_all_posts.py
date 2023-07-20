@@ -13,7 +13,6 @@ class GetAllPostsService:
     async def __call__(self) -> list[dto.Post]:
         if posts := await self._cache.get_posts(key="posts"):
             exists = json.loads(posts)
-            print("Cached")
             return [dto.Post(post_id=int(key), name=value) for key, value in exists.items()]
         posts = await self._dao.get_posts()
         await self._cache.set_posts(key="posts", value=posts)

@@ -20,4 +20,16 @@ FROM build_app as development
 
 RUN poetry install --with dev
 
-CMD alembic upgrade head && python -m src
+CMD python -m src
+
+FROM build_app as migration
+
+RUN poetry install --with dev
+
+CMD python -m alembic upgrade head
+
+FROM build_app as testing
+
+RUN poetry install --with dev
+
+CMD pytest -vv

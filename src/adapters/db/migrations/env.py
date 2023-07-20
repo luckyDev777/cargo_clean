@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -9,6 +10,7 @@ from alembic import context
 
 from src.adapters.db.models.base import BaseModel
 from src.presentation.api.settings.config import load_config
+from tests.mocks import get_test_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,7 +21,10 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", load_config().db.full_url)
+if os.getenv("TEST"):
+    config.set_main_option("sqlalchemy.url", get_test_config().db.full_url)
+else:
+    config.set_main_option("sqlalchemy.url", load_config().db.full_url)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
